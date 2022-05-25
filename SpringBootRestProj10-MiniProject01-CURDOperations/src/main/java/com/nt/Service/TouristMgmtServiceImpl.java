@@ -61,4 +61,18 @@ public class TouristMgmtServiceImpl implements ITouristMgmtService {
 		}
 		
 	}
+
+	@Override
+	public String updateTouristBudgetById(Integer id, Float hikePercent) throws TouristNotFoundException {
+		Optional<Tourist> opt =touristRepo.findById(id);
+		if(opt.isPresent()) {
+			Tourist tourist=opt.get();
+			tourist.setBudget(tourist.getBudget()+(tourist.getBudget()*(hikePercent/100)));
+			touristRepo.save(tourist);
+			return "Tourist budget is updated";
+		}
+		else {
+			throw new TouristNotFoundException(id+"Tourist not found");
+		}
+	}
 }

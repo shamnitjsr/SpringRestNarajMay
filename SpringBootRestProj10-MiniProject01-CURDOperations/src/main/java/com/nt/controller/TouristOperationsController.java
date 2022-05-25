@@ -7,6 +7,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -65,31 +66,44 @@ public class TouristOperationsController {
 		}
 
 	}
-	
+
 	@PutMapping("/modify")
-	public ResponseEntity<String> modifyTourist(@RequestBody Tourist tourist){
+	public ResponseEntity<String> modifyTourist(@RequestBody Tourist tourist) {
 		try {
-			
+
 			String msg = service.updateTouristDetails(tourist);
-			return new ResponseEntity<String>(msg,HttpStatus.OK);
-		}
-		catch(Exception e) {
+			return new ResponseEntity<String>(msg, HttpStatus.OK);
+		} catch (Exception e) {
 			e.printStackTrace();
-			return new ResponseEntity<String>(e.getMessage(),HttpStatus.INTERNAL_SERVER_ERROR);
+			return new ResponseEntity<String>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 	}
-	
+
 	@DeleteMapping("/delete/{id}")
-	public ResponseEntity<String> removeTourist(@PathVariable("id") Integer id){
+	public ResponseEntity<String> removeTourist(@PathVariable("id") Integer id) {
+		try {
+			// use service
+			String msg = service.deleteTourist(id);
+			return new ResponseEntity<String>(msg, HttpStatus.OK);
+		} catch (Exception e) {
+			e.printStackTrace();
+			return new ResponseEntity<String>(e.getMessage(), HttpStatus.NOT_FOUND);
+		}
+	}
+
+	@PatchMapping("/budgetModify/{id}/{hike}")
+	public ResponseEntity<String> modifyTouristBudgetById(@PathVariable("id") Integer id,
+			@PathVariable("hike") Float hikePercentage) {
 		try {
 			//use service
-			String msg=service.deleteTourist(id);
+			String msg=service.updateTouristBudgetById(id, hikePercentage);
 			return new ResponseEntity<String>(msg,HttpStatus.OK);
 		}
 		catch(Exception e) {
 			e.printStackTrace();
 			return new ResponseEntity<String>(e.getMessage(),HttpStatus.NOT_FOUND);
 		}
+
 	}
 
 }
